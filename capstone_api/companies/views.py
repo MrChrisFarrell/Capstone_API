@@ -109,6 +109,15 @@ class EmployeeDetail(APIView):
         except Employee.DoesNotExist:
             raise Http404
 
+    def get(self, request, pk):
+        email = self.request.query_params.get('email')
+        try:
+            employees = Employee.objects.get(email=email)
+            serializer = EmployeeSerializer(employees)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Employee.DoesNotExist:
+            return Response(False)
+
     def put(self, request, pk):
         employee = self.get_object(pk)
         serializer = EmployeeSerializer(employee, data=request.data)
