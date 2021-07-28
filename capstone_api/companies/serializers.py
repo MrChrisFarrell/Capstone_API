@@ -5,7 +5,7 @@ from .models import Company, Promotion, Employee
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['id', 'company_key', 'photo_url', 'details', 'street_address', 'city', 'state', 'zip_code', 'phone_number']
+        fields = ['id', 'name', 'company_key', 'photo_url', 'details', 'street_address', 'city', 'state', 'zip_code', 'phone_number']
 
 
 class PromotionSerializer(serializers.ModelSerializer):
