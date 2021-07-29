@@ -11,8 +11,9 @@ from django.http import Http404
 class CompanyList(APIView):
 
     def get(self, request):
-        companies = Company.objects.all()
-        serializer = CompanySerializer(companies, many=True)
+        company_key = self.request.query_params.get('company_key')
+        company = Company.objects.get(company_key=company_key)
+        serializer = CompanySerializer(company)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -110,10 +111,10 @@ class EmployeeDetail(APIView):
             raise Http404
 
     def get(self, request, pk):
-        email = self.request.query_params.get('email')
+        user = self.request.query_params.get('user')
         try:
-            employees = Employee.objects.get(email=email)
-            serializer = EmployeeSerializer(employees)
+            employee = Employee.objects.get(user=user)
+            serializer = EmployeeSerializer(employee)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Employee.DoesNotExist:
             return Response(False)
