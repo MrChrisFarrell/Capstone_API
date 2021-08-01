@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Company, Promotion, Employee
-from .serializers import CompanySerializer, PromotionSerializer, EmployeeSerializer
+from .models import Company, Promotion, Employee, CompanyLatLong
+from .serializers import CompanySerializer, PromotionGetSerializer, PromotionPPDSerializer, EmployeeSerializer, CompanyGetLatLongSerializer, CompanyPPDLatLongSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,9 +12,14 @@ class CompanyList(APIView):
 
     def get(self, request):
         company_key = self.request.query_params.get('company_key')
-        company = Company.objects.get(company_key=company_key)
-        serializer = CompanySerializer(company)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if company_key:
+            company = Company.objects.get(company_key=company_key)
+            serializer = CompanySerializer(company)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            companies = Company.objects.all()
+            serializer = CompanySerializer(companies, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = CompanySerializer(data=request.data)
@@ -51,11 +56,11 @@ class PromotionList(APIView):
 
     def get(self, request):
         promotions = Promotion.objects.all()
-        serializer = PromotionSerializer(promotions, many=True)
+        serializer = PromotionGetSerializer(promotions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = PromotionSerializer(data=request.data)
+        serializer = PromotionPPDSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -73,7 +78,7 @@ class PromotionDetail(APIView):
 
     def put(self, request, pk):
         promotion = self.get_object(pk)
-        serializer = PromotionSerializer(promotion, data=request.data)
+        serializer = PromotionPPDSerializer(promotion, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -131,3 +136,19 @@ class EmployeeDetail(APIView):
         employee = self.get_object(pk)
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CompanyLatLongList(APIView):
+
+    def get(self, request):
+        comp_lat_longs = CompanyLatLong.objects.all()
+        serializer = CompanyGetLatLongSerializer(comp_lat_longs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = CompanyPPDLatLongSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

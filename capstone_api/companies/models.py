@@ -11,10 +11,11 @@ class Company(models.Model):
     state = models.CharField(max_length=2)
     zip_code = models.CharField(max_length=5)
     phone_number = models.CharField(max_length=10)
+    owner = models.CharField(max_length=20)
 
 
 class Promotion(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, related_name='promotion', on_delete=models.CASCADE)
     details = models.CharField(max_length=200)
     start_date = models.DateField(null=False)
     end_date = models.DateField(null=False)
@@ -31,3 +32,9 @@ class Employee(models.Model):
     email = models.CharField(max_length=50)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     user = models.IntegerField(default=0)
+
+
+class CompanyLatLong(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    lat = models.DecimalField(max_digits=9, decimal_places=6)
+    long = models.DecimalField(max_digits=9, decimal_places=6)
