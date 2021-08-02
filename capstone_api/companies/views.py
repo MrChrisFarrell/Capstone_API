@@ -38,6 +38,16 @@ class CompanyDetail(APIView):
         except Company.DoesNotExist:
             raise Http404
 
+    def get(self, request, pk):
+        user_id = self.request.query_params.get('user_id')
+        if user_id:
+            try:
+                company = Company.objects.get(owner=user_id)
+                serializer = CompanySerializer(company)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Company.DoesNotExist:
+                raise Http404
+
     def put(self, request, pk):
         company = self.get_object(pk)
         serializer = CompanySerializer(company, data=request.data)
