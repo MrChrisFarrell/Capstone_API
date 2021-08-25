@@ -3,12 +3,14 @@ from .models import Company, Promotion, Employee, CompanyLatLong
 from .serializers import CompanySerializer, PromotionGetSerializer, PromotionPPDSerializer, EmployeeSerializer, CompanyGetLatLongSerializer, CompanyPPDLatLongSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.http import Http404
 # Create your views here.
 
 
 class CompanyList(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         company_key = self.request.query_params.get('company_key')
