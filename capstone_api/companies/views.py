@@ -33,6 +33,7 @@ class CompanyList(APIView):
 
 
 class CompanyDetail(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         try:
@@ -65,6 +66,7 @@ class CompanyDetail(APIView):
 
 
 class PromotionList(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         promotions = Promotion.objects.all()
@@ -81,6 +83,7 @@ class PromotionList(APIView):
 
 
 class PromotionDetail(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         try:
@@ -103,6 +106,7 @@ class PromotionDetail(APIView):
 
 
 class EmployeeList(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         company_id = self.request.query_params.get('company_id')
@@ -120,6 +124,7 @@ class EmployeeList(APIView):
 
 
 class EmployeeDetail(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         try:
@@ -151,6 +156,7 @@ class EmployeeDetail(APIView):
 
 
 class CompanyLatLongList(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         comp_lat_longs = CompanyLatLong.objects.all()
