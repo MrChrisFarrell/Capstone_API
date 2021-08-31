@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class Company(models.Model):
     name = models.CharField(max_length=50)
     company_key = models.CharField(max_length=50, unique=True)
@@ -31,7 +32,7 @@ class Employee(models.Model):
     zip_code = models.CharField(max_length=5)
     email = models.CharField(max_length=50)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    user = models.IntegerField(default=0)
+    user = models.CharField(max_length=50, null=True)
 
 
 class CompanyLatLong(models.Model):
