@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Company, Promotion, Employee, CompanyLatLong
-from .serializers import CompanySerializer, PromotionGetSerializer, PromotionPPDSerializer, EmployeeSerializer, CompanyGetLatLongSerializer, CompanyPPDLatLongSerializer
+from .models import Company, Promotion, Employee, CompanyLatLong, EmployeeLatLong
+from .serializers import CompanySerializer, PromotionGetSerializer, PromotionPPDSerializer, EmployeeSerializer, CompanyGetLatLongSerializer, CompanyPPDLatLongSerializer, EmployeeGetLatLongSerializer, EmployeePPDLatLongSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -170,3 +170,39 @@ class CompanyLatLongList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EmployeeLatLongList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        emp_lat_longs = EmployeeLatLong.objects.all()
+        serializer = EmployeeGetLatLongSerializer(emp_lat_longs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = EmployeePPDLatLongSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EmployeeLatLongDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return EmployeeLatLong.objects.get(pk=pk)
+        except Employee.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        employee = self.request.query_params.get('employee')
+        try:
+            emp_lat_long = EmployeeLatLong.objects.get(employee=employee)
+            serializer = EmployeeGetLatLongSerializer(emp_lat_long)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Employee.DoesNotExist:
+            return Response(False)

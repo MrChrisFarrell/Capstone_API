@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Company, Promotion, Employee, CompanyLatLong
+from .models import Company, Promotion, Employee, CompanyLatLong, EmployeeLatLong
 
 
 class CompanySerializer(serializers.ModelSerializer):
@@ -40,3 +40,17 @@ class CompanyPPDLatLongSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyLatLong
         fields = ['id', 'company', 'lat', 'long']
+
+
+class EmployeeGetLatLongSerializer(serializers.ModelSerializer):
+    employee = EmployeeSerializer(read_only=True)
+
+    class Meta:
+        model = EmployeeLatLong
+        fields = ['id', 'employee', 'lat', 'long']
+
+
+class EmployeePPDLatLongSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeLatLong
+        fields = ['id', 'employee', 'lat', 'long']

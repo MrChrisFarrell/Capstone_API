@@ -39,3 +39,9 @@ class CompanyLatLong(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     long = models.DecimalField(max_digits=9, decimal_places=6)
+
+
+class EmployeeLatLong(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    lat = models.DecimalField(max_digits=9, decimal_places=6)
+    long = models.DecimalField(max_digits=9, decimal_places=6)
